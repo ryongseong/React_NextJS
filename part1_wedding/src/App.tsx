@@ -2,6 +2,7 @@ import classNames from 'classnames/bind'
 import { useEffect, useState } from 'react'
 
 import styles from './App.module.scss'
+
 import FullScreenMessage from './components/shared/FullScreenMessage'
 
 const cx = classNames.bind(styles)
@@ -11,24 +12,22 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
 
-  // 1. wedding 데이터 호출
+  // 1. wedding data 호출
   useEffect(() => {
     setLoading(true)
 
     fetch('http://localhost:8888/wedding')
-      .then((response) => {
-        if (!response.ok) {
+      .then((res) => {
+        if (res.ok === false) {
           throw new Error('청첩장 정보를 불러오지 못했습니다.')
         }
-
-        return response.json()
+        return res.json()
       })
       .then((data) => {
         setWedding(data)
       })
-      .catch((error) => {
-        console.log('에러 발생', error)
-
+      .catch((e) => {
+        console.log(e)
         setError(true)
       })
       .finally(() => {
@@ -36,7 +35,7 @@ function App() {
       })
   }, [])
 
-  if (loading === false) {
+  if (loading) {
     return <FullScreenMessage type="loading" />
   }
 
